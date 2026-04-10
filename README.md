@@ -5,20 +5,20 @@ YAML for Home Assistant ESPHome Builder to make an inexpensive Satellite Voice A
 
 COMPONENTS:
 
-Seeed Studio ESP32-C6   (Amazon ASIN B0DJ6N55FX)
-INMP441 Omnidirectional I2S Microphone Module MEMS, high precision, low power, supports ESP32   (Amazon ASIN B0FBWQF74T or equivalent)
-MAX98357 I2S Audio Amplifier Module, Class D  (Amazon ASIN B096ZM9LL5 or equivalent)
-4 Ohm 3 Watt Mini Speaker   (Amazon ASIN B0BTP67F81 or equivalent;  8 ohm will also work, lower peak volume)
+Seeed Studio ESP32-C6   (Amazon ASIN B0DJ6N55FX)<br>
+INMP441 Omnidirectional I2S Microphone Module MEMS, high precision, low power, supports ESP32   (Amazon ASIN B0FBWQF74T or equivalent)<br><br>
+MAX98357 I2S Audio Amplifier Module, Class D  (Amazon ASIN B096ZM9LL5 or equivalent)<br><br>
+4 Ohm 3 Watt Mini Speaker   (Amazon ASIN B0BTP67F81 or equivalent;  8 ohm will also work, lower peak volume)<br><br>
 
-Optional: LED and 1K resistor (or for brighter, 330ohm resistor)
+Optional: LED and 1K resistor (or for brighter, 330ohm resistor)<br><br>
 
-Connections:
-ESP32-C6 --------   MAX98357A
-D0  -------------  LRC (pin 7)
-D1  -------------  BCLK (pin 6)
-D9  -------------  DIN  (pin 5)
-GND -------------  GND (pin 2)
-5V  -------------  5V (pin 1)
+Connections:<br>
+```ESP32-C6 --------   MAX98357A<br>
+D0  -------------  LRC (pin 7)<br>
+D1  -------------  BCLK (pin 6)<br>
+D9  -------------  DIN  (pin 5)<br>
+GND -------------  GND (pin 2)<br>
+5V  -------------  5V (pin 1)<br>
 
 ESP32-C6 --------  INMP441
 D0  -------------  WS  (left pin 2)
@@ -31,5 +31,7 @@ Speaker output from MAX connect the 2 speaker wires
 
 Optional LED and resistor - From ESP32 D10 to LED with 330-1000 ohm resistor in series to ground
 
+```
+Power the device either with rechargeable battery connected to 3V3 and GND or USB connector
 
 
