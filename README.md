@@ -3,7 +3,7 @@ Build an inexpensive Home Assistant Voice Assist Satellite
 
 YAML for Home Assistant ESPHome Builder to make an inexpensive Satellite Voice Assist Device (Code file)
 
-COMPONENTS:
+COMPONENTS:<br>
 Seeed Studio ESP32-C6   (Amazon ASIN B0DJ6N55FX)<br>
 INMP441 Omnidirectional I2S Microphone Module MEMS, high precision, low power, supports ESP32   (Amazon ASIN B0FBWQF74T or equivalent)<br><br>
 MAX98357 I2S Audio Amplifier Module, Class D  (Amazon ASIN B096ZM9LL5 or equivalent)<br><br>
