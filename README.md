@@ -43,7 +43,9 @@ Power the device either with rechargeable battery connected to 3V3 and GND or US
 Back & Front of MAX98357A <br> <br>
 
 <img width="267" height="271" alt="image" src="https://github.com/user-attachments/assets/5d22788c-cd14-4525-a107-a18b0a856bfa" />
-INMP441
+INMP441<br><br>
+<img width="399" height="364" alt="image" src="https://github.com/user-attachments/assets/7b6e7c80-62dc-4fd9-bd17-f1ab3984b7b7" />
+
 
 
 
