@@ -1,10 +1,9 @@
 # Home-Assistant-Voice-Assist-ESP32-C6
 Build an inexpensive Home Assistant Voice Assist Satellite 
 
-YAML for Home Assistant ESPHome Builder to make an inexpensive Satellite Voice Assist Device
+YAML for Home Assistant ESPHome Builder to make an inexpensive Satellite Voice Assist Device (Code file)
 
 COMPONENTS:
-
 Seeed Studio ESP32-C6   (Amazon ASIN B0DJ6N55FX)<br>
 INMP441 Omnidirectional I2S Microphone Module MEMS, high precision, low power, supports ESP32   (Amazon ASIN B0FBWQF74T or equivalent)<br><br>
 MAX98357 I2S Audio Amplifier Module, Class D  (Amazon ASIN B096ZM9LL5 or equivalent)<br><br>
@@ -13,12 +12,13 @@ MAX98357 I2S Audio Amplifier Module, Class D  (Amazon ASIN B096ZM9LL5 or equival
 Optional: LED and 1K resistor (or for brighter, 330ohm resistor)<br><br>
 
 Connections:<br>
-```ESP32-C6 --------   MAX98357A<br>
-D0  -------------  LRC (pin 7)<br>
-D1  -------------  BCLK (pin 6)<br>
-D9  -------------  DIN  (pin 5)<br>
-GND -------------  GND (pin 2)<br>
-5V  -------------  5V (pin 1)<br>
+```
+ESP32-C6 --------   MAX98357A
+D0  -------------  LRC (pin 7)
+D1  -------------  BCLK (pin 6)
+D9  -------------  DIN  (pin 5)
+GND -------------  GND (pin 2)
+5V  -------------  5V (pin 1)
 
 ESP32-C6 --------  INMP441
 D0  -------------  WS  (left pin 2)
@@ -27,11 +27,23 @@ D2  -------------  SD  (right pin 1)
 3V3 -------------  3V3 (right pin 2)
 GND -------------  GND (right pin 3)
 
+(pin numbers are relative to locating what I am calling pin 1 and orienting the module to match)
+
 Speaker output from MAX connect the 2 speaker wires
 
 Optional LED and resistor - From ESP32 D10 to LED with 330-1000 ohm resistor in series to ground
 
 ```
 Power the device either with rechargeable battery connected to 3V3 and GND or USB connector
+
+
+<img width="871" height="702" alt="image" src="https://github.com/user-attachments/assets/f35430cb-d406-41b3-a023-c7019d593129" />
+
+<img width="415" height="217" alt="image" src="https://github.com/user-attachments/assets/a2dd4364-f8c3-4256-9c51-8def8ade707d" />
+Back & Front of MAX98357A <br> <br>
+
+<img width="267" height="271" alt="image" src="https://github.com/user-attachments/assets/5d22788c-cd14-4525-a107-a18b0a856bfa" />
+INMP441
+
 
 
