@@ -2,6 +2,13 @@
 Build an inexpensive Home Assistant Voice Assist Satellite 
 
 YAML for Home Assistant ESPHome Builder to make an inexpensive Satellite Voice Assist Device (Code file)
+ 19Apr26 version essentially the same but adds substitutions and there are some different values compared to original.
+ Device is working push-to-talk (PTT) - I2S bus shared for mic & spekaer, current (2026.4.x) ESPHome Builder doesn't support states needed for code to properly share,
+ so fixed timeouts are used. I've found the autogain for mic settings doesn't seem to have any effect, I haven't tried 0 which is to disable autogain. 
+ I've found the mic sensitivity on the wakeword FAR superior to the Waveshare ESP32-S3's I've been using, and the response time is amazing
+ IF remove the audio tone acknowledging the wakeword and just rely on the LED, you'll see zero delay between speaking wakeword and sending speech to HA.
+ This code doesn't expose a media device - I have tried, it will compile and may work, but I am not and will not be using this for anything but
+ speech/tone responses to assist requests/alarms.
 
 COMPONENTS:<br>
 Seeed Studio ESP32-C6   (Amazon ASIN B0DJ6N55FX)<br>
