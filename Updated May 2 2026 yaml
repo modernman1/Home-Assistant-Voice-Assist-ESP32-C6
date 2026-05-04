@@ -1,0 +1,186 @@
+substitutions:
+  device_name: voice-satellite-mic
+  friendly_name: Voice Satellite
+  mic_sample_rate: "16000"
+  speaker_sample_rate: "16000"
+  mic_channel: right
+  logger_level: DEBUG
+  client_connected_delay: 100ms
+  post_error_delay: 500ms
+  post_stream_delay: 500ms
+  speaker_timeout: 500ms
+  noise_suppression: "2"
+  auto_gain: 0dBFS
+  volume_multiplier: "20.0"
+  # wake_word_model: https://github.com/esphome/micro-wake-word-models/raw/main/models/v2/hey_mycroft.json
+  wake_word_model: https://raw.githubusercontent.com/TaterTotterson/microWakeWords/refs/heads/main/microWakeWordsV2/hey_morgan.json
+  default_volume: "1.0"
+  speaker_buffer_duration: 4000ms
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PER-DEVICE CONFIGURATION — change these when copying to a new device
+# ══════════════════════════════════════════════════════════════════════════════
+
+api:
+  encryption:
+    key: !secret api_encryption_key
+  on_client_connected:
+    - delay: ${client_connected_delay}
+    - micro_wake_word.start:
+  on_client_disconnected:
+    - voice_assistant.stop:
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# ══════════════════════════════════════════════════════════════════════════════
+# FIXED CONFIGURATION — no changes needed below this line
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Global volume state ──────────────────────────────────────────────────────
+globals:
+  - id: vol
+    type: float
+    restore_value: true
+    initial_value: '1.0'
+
+rtttl:
+  id: boot_chime
+  speaker: va_speaker
+  gain: 1.0
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  on_boot:
+    priority: -100
+    then:
+      - delay: 2000ms
+      - lambda: |-
+          id(va_speaker).set_volume(1.0f);
+      - rtttl.play:
+          id: boot_chime
+          rtttl: "boot:d=32,o=5,b=180:c,e,g"
+      - wait_until:
+          condition:
+            not:
+              rtttl.is_playing:
+      - lambda: |-
+          id(va_speaker).set_volume(id(vol));
+
+esp32:
+  board: seeed_xiao_esp32c6
+  variant: esp32c6
+  framework:
+    type: esp-idf
+
+logger:
+  level: ${logger_level}
+
+captive_portal:
+
+# ── I2S bus ──────────────────────────────────────────────────────────────────
+i2s_audio:
+  - id: i2s_bus
+    i2s_bclk_pin: GPIO1    # INMP441 SCK / MAX98357 BCLK → XIAO D1
+    i2s_lrclk_pin: GPIO0   # INMP441 WS  / MAX98357 LRC  → XIAO D0
+
+# ── INMP441 microphone ───────────────────────────────────────────────────────
+microphone:
+  - platform: i2s_audio
+    id: inmp441_mic
+    i2s_audio_id: i2s_bus
+    i2s_din_pin: GPIO2     # INMP441 SD → XIAO D2
+    adc_type: external
+    pdm: false
+    channel: ${mic_channel}
+    bits_per_sample: 32bit
+    sample_rate: ${mic_sample_rate}
+
+# ── MAX98357A speaker ────────────────────────────────────────────────────────
+speaker:
+  - platform: i2s_audio
+    id: va_speaker
+    i2s_audio_id: i2s_bus
+    dac_type: external
+    i2s_dout_pin: GPIO20   # MAX98357A DIN → XIAO D9
+    channel: mono
+    sample_rate: ${speaker_sample_rate}
+    timeout: ${speaker_timeout}
+    buffer_duration: ${speaker_buffer_duration}
+
+# ── Wake word indicator LED ──────────────────────────────────────────────────
+output:
+  - platform: gpio
+    id: wake_led_output
+    pin: GPIO18
+
+light:
+  - platform: binary
+    id: wake_led
+    output: wake_led_output
+    name: "Wake Word LED"
+  - platform: status_led
+    id: status_light
+    pin: GPIO15
+
+# ── Volume slider ────────────────────────────────────────────────────────────
+number:
+  - platform: template
+    name: "Speaker Volume"
+    id: speaker_volume
+    min_value: 0.1
+    max_value: 2.0
+    step: 0.1
+    initial_value: ${default_volume}
+    optimistic: true
+    restore_value: true
+    on_value:
+      - lambda: |-
+          id(vol) = x;
+          id(va_speaker).set_volume(x);
+
+# ── microWakeWord ────────────────────────────────────────────────────────────
+micro_wake_word:
+  microphone: inmp441_mic
+  models:
+    - model: ${wake_word_model}
+  on_wake_word_detected:
+    - rtttl.play:
+        id: boot_chime
+        rtttl: "wake:d=32,o=6,b=180:c,e"
+    - light.turn_on: wake_led
+    - wait_until:
+        condition:
+          not:
+            rtttl.is_playing:
+    - voice_assistant.start:
+
+# ── Voice Assistant ──────────────────────────────────────────────────────────
+voice_assistant:
+  id: va
+  microphone: inmp441_mic
+  speaker: va_speaker
+  noise_suppression_level: ${noise_suppression}
+  auto_gain: ${auto_gain}
+  volume_multiplier: ${volume_multiplier}
+  on_listening:
+    - logger.log: "Listening..."
+  on_tts_stream_start:
+    - logger.log: "Speaker playing response"
+  on_tts_stream_end:
+    - delay: ${post_stream_delay}
+    - light.turn_off: wake_led
+    - micro_wake_word.start:
+  on_error:
+    - delay: ${post_error_delay}
+    - light.turn_off: wake_led
+    - micro_wake_word.start:
+  on_idle:
+    - light.turn_off: wake_led
+    - micro_wake_word.start:
